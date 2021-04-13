@@ -1,6 +1,6 @@
 public class Inversions {
     public static long count(int[] a) {
-        long res = 0;
+        int res = 0;
         for (int i = 0; i < a.length; i++) {
             for (int j = i + 1; j < a.length; j++) {
                 if (a[i] > a[j]) {
@@ -13,21 +13,22 @@ public class Inversions {
 
     public static int[] generate(int n, long k) {
         int[] res = new int[n];
-
-        for (int i = 0; i < n && k > 0; i++) {
-            long idx = Math.max(i, n - 1 - k);
-            res[(int) idx] = n - 1 - i;
-            k -= n - 1 - idx;
+        for (int i = 0; i < n; i++) {
+            res[i] = i;
         }
-
-        int val = 0;
-        for (int j = 0; j < n; j++) {
-            if (res[j] == 0) {
-                res[j] = val;
-                val++;
+        int i = 1;
+        while (k != 0) {
+            if (res[i] > res[i - 1]) {
+                int tmp = res[i];
+                res[i] = res[i - 1];
+                res[i - 1] = tmp;
+                k--;
+            }
+            i++;
+            if (i == n) {
+                i = 1;
             }
         }
-
         return res;
     }
 

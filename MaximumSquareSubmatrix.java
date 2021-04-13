@@ -3,7 +3,7 @@ public class MaximumSquareSubmatrix {
         int res = 0;
         int prev = 0;
         int rows = a.length, cols = rows > 0 ? a[0].length : 0;
-        int[] dp = new int[cols + 1];
+        int[] dp = new int[cols];
         for (int i = 1; i <= rows; i++) {
             for (int j = 1; j <= cols; j++) {
                 if (a[i - 1][j - 1] == 1) {
@@ -15,7 +15,9 @@ public class MaximumSquareSubmatrix {
                 else {
                     dp[j] = 0;
                 }
+                StdOut.print(dp[j] + " ");
             }
+            StdOut.println();
         }
         return res;
     }
