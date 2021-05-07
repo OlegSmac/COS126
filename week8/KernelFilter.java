@@ -36,42 +36,27 @@ public class KernelFilter {
 
 
     public static Picture identity(Picture picture) {
-        double[][] k = new double[3][3];
-        k[0][0] = 0; k[0][1] = 0; k[0][2] = 0;
-        k[1][0] = 0; k[1][1] = 1; k[1][2] = 0;
-        k[2][0] = 0; k[2][1] = 0; k[2][2] = 0;
+        double[][] k = {{0, 0, 0}, {0, 1, 0}, {0, 0, 0}};
         return calculation(picture, k, 1);
     }
 
     public static Picture gaussian(Picture picture) {
-        double[][] k = new double[3][3];
-        k[0][0] = 1; k[0][1] = 2; k[0][2] = 1;
-        k[1][0] = 2; k[1][1] = 4; k[1][2] = 2;
-        k[2][0] = 1; k[2][1] = 2; k[2][2] = 1;
+        double[][] k = {{1, 2, 1}, {2, 4, 2}, {1, 2, 1}};
         return calculation(picture, k, 1/16.0);
     }
 
     public static Picture sharpen(Picture picture) {
-        double[][] k = new double[3][3];
-        k[0][0] = 0; k[0][1] = -1; k[0][2] = 0;
-        k[1][0] = -1; k[1][1] = 5; k[1][2] = -1;
-        k[2][0] = 0; k[2][1] = -1; k[2][2] = 0;
+        double[][] k = {{0, -1, 0}, {-1, 5, -1}, {0, -1, 0}};
         return calculation(picture, k, 1);
     }
 
     public static Picture laplacian(Picture picture) {
-        double[][] k = new double[3][3];
-        k[0][0] = -1; k[0][1] = -1; k[0][2] = -1;
-        k[1][0] = -1; k[1][1] = 8; k[1][2] = -1;
-        k[2][0] = -1; k[2][1] = -1; k[2][2] = -1;
+        double[][] k = {{-1, -1, -1}, {-1, 8, -1}, {-1, -1, -1}};
         return calculation(picture, k, 1);
     }
 
     public static Picture emboss(Picture picture) {
         double[][] k = {{-2, -1, 0}, {-1, 1, 1}, {0, 1, 2}};
-        /* k[0][0] = -2; k[0][1] = -1; k[0][2] = 0;
-        k[1][0] = -1; k[1][1] = 1; k[1][2] = 1;
-        k[2][0] = 0; k[2][1] = 1; k[2][2] = 2; */
         return calculation(picture, k, 1);
     }
 
