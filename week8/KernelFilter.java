@@ -1,175 +1,34 @@
 import java.awt.Color;
 
 public class KernelFilter {
-    private static Picture calculation(Picture picture, double[][] kernel, double k) {
+    private static int trim(double color) {
+        return (int) Math.round(Math.min(Math.max(color, 0), 255));
+    }
+
+    private static Picture calculation(Picture picture, double[][] k, double delta) {
         Picture res = new Picture(picture.width(), picture.height());
         for (int col = 0; col < picture.width(); col++) {
             for (int row = 0; row < picture.height(); row++) {
                 double sumred = 0;
                 double sumgreen = 0;
                 double sumblue = 0;
-                for (int i = 0; i < kernel.length; i++) {
-                    for (int j = 0; j < kernel[i].length; j++) {
-                        if (i + col - kernel[0].length / 2 < 0 && j + row - kernel.length / 2 < 0) {
-                            int x = i + col - kernel[0].length / 2;
-                            int y = j + row - kernel.length / 2;
-                            if (picture.width() > Math.abs(x)) {
-                                x = picture.width() + x;
-                            }
-                            else {
-                                x = 0;
-                            }
-                            if (picture.height() > Math.abs(y)) {
-                                y = picture.height() + y;
-                            }
-                            else {
-                                y = 0;
-                            }
-                            Color color = picture.get(x, y);
-                            sumred += kernel[i][j] * k * color.getRed();
-                            sumgreen += kernel[i][j] * k * color.getGreen();
-                            sumblue += kernel[i][j] * k * color.getBlue();
+                for (int i = 0; i < k.length; i++) {
+                    for (int j = 0; j < k[0].length; j++) {
+                        int x = (i + col - k.length / 2) % picture.width();
+                        int y = (j + row - k[0].length / 2) % picture.height();
+                        if (x < 0) {
+                            x = picture.width() + x;
                         }
-                        else if (i + col - kernel[0].length / 2 > picture.width() - 1 &&
-                                j + row - kernel.length / 2 > picture.height() - 1) {
-                            int x = i + col - kernel[0].length / 2;
-                            int y = j + row - kernel.length / 2;
-                            x = x - picture.width();
-                            if (x > picture.width() - 1) {
-                                x = 0;
-                            }
-                            y = y - picture.height();
-                            if (y > picture.height() - 1) {
-                                y = 0;
-                            }
-                            Color color = picture.get(x, y);
-                            sumred += kernel[i][j] * k * color.getRed();
-                            sumgreen += kernel[i][j] * k * color.getGreen();
-                            sumblue += kernel[i][j] * k * color.getBlue();
+                        if (y < 0) {
+                            y = picture.height() + y;
                         }
-                        else if (i + col - kernel[0].length / 2 < 0 &&
-                                j + row - kernel.length / 2 > picture.height() - 1) {
-                            int x = i + col - kernel[0].length / 2;
-                            int y = j + row - kernel.length / 2;
-                            if (picture.width() > Math.abs(x)) {
-                                x = picture.width() + x;
-                            }
-                            else {
-                                x = 0;
-                            }
-                            y = y - picture.height();
-                            if (y > picture.height() - 1) {
-                                y = 0;
-                            }
-                            Color color = picture.get(x, y);
-                            sumred += kernel[i][j] * k * color.getRed();
-                            sumgreen += kernel[i][j] * k * color.getGreen();
-                            sumblue += kernel[i][j] * k * color.getBlue();
-                        }
-                        else if (i + col - kernel[0].length / 2 > picture.width() - 1 &&
-                                j + row - kernel.length / 2 < 0) {
-                            int x = i + col - kernel[0].length / 2;
-                            int y = j + row - kernel.length / 2;
-                            x = x - picture.width();
-                            if (x > picture.width() - 1) {
-                                x = 0;
-                            }
-                            if (picture.height() > Math.abs(y)) {
-                                y = picture.height() + y;
-                            }
-                            else {
-                                y = 0;
-                            }
-                            Color color = picture.get(x, y);
-                            sumred += kernel[i][j] * k * color.getRed();
-                            sumgreen += kernel[i][j] * k * color.getGreen();
-                            sumblue += kernel[i][j] * k * color.getBlue();
-                        }
-                        else if (i + col - kernel[0].length / 2 < 0) {
-                            int x = i + col - kernel[0].length / 2;
-                            int y = j + row - kernel.length / 2;
-                            if (picture.width() > Math.abs(x)) {
-                                x = picture.width() + x;
-                            }
-                            else {
-                                x = 0;
-                            }
-                            Color color = picture.get(x, y);
-                            sumred += kernel[i][j] * k * color.getRed();
-                            sumgreen += kernel[i][j] * k * color.getGreen();
-                            sumblue += kernel[i][j] * k * color.getBlue();
-                        }
-                        else if (j + row - kernel.length / 2 < 0) {
-                            int x = i + col - kernel[0].length / 2;
-                            int y = j + row - kernel.length / 2;
-                            if (picture.height() > Math.abs(y)) {
-                                y = picture.height() + y;
-                            }
-                            else {
-                                y = 0;
-                            }
-                            Color color = picture.get(x, y);
-                            sumred += kernel[i][j] * k * color.getRed();
-                            sumgreen += kernel[i][j] * k * color.getGreen();
-                            sumblue += kernel[i][j] * k * color.getBlue();
-                        }
-                        else if (i + col - kernel[0].length / 2 > picture.width() - 1) {
-                            int x = i + col - kernel[0].length / 2;
-                            int y = j + row - kernel.length / 2;
-                            x = x - picture.width();
-                            if (x > picture.width() - 1) {
-                                x = 0;
-                            }
-                            Color color = picture.get(x, y);
-                            sumred += kernel[i][j] * k * color.getRed();
-                            sumgreen += kernel[i][j] * k * color.getGreen();
-                            sumblue += kernel[i][j] * k * color.getBlue();
-                        }
-                        else if (j + row - kernel.length / 2 > picture.height() - 1) {
-                            int x = i + col - kernel[0].length / 2;
-                            int y = j + row - kernel.length / 2;
-                            y = y - picture.height();
-                            if (y > picture.height() - 1) {
-                                y = 0;
-                            }
-                            Color color = picture.get(x, y);
-                            sumred += kernel[i][j] * k * color.getRed();
-                            sumgreen += kernel[i][j] * k * color.getGreen();
-                            sumblue += kernel[i][j] * k * color.getBlue();
-                        }
-                        else {
-                            int x = i + col - kernel[0].length / 2;
-                            int y = j + row - kernel.length / 2;
-                            Color color = picture.get(x, y);
-                            sumred += kernel[i][j] * k * color.getRed();
-                            sumgreen += kernel[i][j] * k * color.getGreen();
-                            sumblue += kernel[i][j] * k * color.getBlue();
-                        }
+                        Color c = picture.get(x, y);
+                        sumred += k[i][j] * delta * c.getRed();
+                        sumgreen += k[i][j] * delta * c.getGreen();
+                        sumblue += k[i][j] * delta * c.getBlue();
                     }
                 }
-                if (sumred > 255) {
-                    sumred = 255;
-                }
-                if (sumgreen > 255) {
-                    sumgreen = 255;
-                }
-                if (sumblue > 255) {
-                    sumblue = 255;
-                }
-                if (sumred < 0) {
-                    sumred = 0;
-                }
-                if (sumgreen < 0) {
-                    sumgreen = 0;
-                }
-                if (sumblue < 0) {
-                    sumblue = 0;
-                }
-                int red = (int) Math.round(sumred);
-                int green = (int) Math.round(sumgreen);
-                int blue = (int) Math.round(sumblue);
-                Color c = new Color(red, green, blue);
-                res.set(col, row, c);
+                res.set(col, row, new Color(trim(sumred), trim(sumgreen), trim(sumblue)));
             }
         }
         return res;
